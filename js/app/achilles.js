@@ -54,13 +54,15 @@
 				});
 			}
             
-            self.loadDomainMeta = function () {
+            self.loadDomainMeta = function (domain) {
                 $.ajax({
                     type: "GET",
                     url: getUrlFromData(self.datasource(), "domainmeta"),
                     contentType: "application/json; charset=utf-8",
                 }).done(function (result) {
-                    self.domainMetaData(result);
+                    var attributeNames = $.map(result.MESSAGES.ATTRIBUTENAME, function(n,i){return n.toLowerCase();});
+                    var i = attributeNames.indexOf(domain.toLowerCase());
+                    self.domainMetaData(result.MESSAGES.ATTRIBUTEVALUE[i]);
                 });
             }
 
@@ -70,7 +72,6 @@
 					url: getUrlFromData(self.datasource(), "person"),
 					contentType: "application/json; charset=utf-8",
 				}).done(function (result) {
-                    //result.DOMAINMETA = self.domainMetaData;
 					result.SUMMARY = common.dataframeToArray(result.SUMMARY);
 					result.SUMMARY.forEach(function (d, i, ar) {
 						if (!isNaN(d.ATTRIBUTE_VALUE))
@@ -108,14 +109,6 @@
 		viewModel.observationPeriodsData.subscribe(function (newData) {
 			updateObservationPeriods(newData);
 		});	
-        viewModel.domainMetaData.subscribe(function (newData) {
-			updateDomainMeta(newData);
-		});	
-
-		function updateDomainMeta(data) {
-            var result = data;
-            var i = result.DOMAINMETA.ATTRIBUTENAME.indexOf(report);
-        }
         
 		function updateDashboard(data) {
 			var result = data;
@@ -406,7 +399,7 @@
 
 		function updatePerson(data) {
 			var result = data;			
-            $("#personMeta").append(result.DOMAINMETA);
+            //$("#personMeta").append(result.DOMAINMETA);
 			curl(["jnj/chart", "common"], function (jnj_chart, common) {
 				d3.selectAll("#reportPerson #genderPie svg").remove();
 				genderDonut = new jnj_chart.donut();
@@ -461,7 +454,7 @@
 		});
 
 		curl(["sammy"], function (Sammy) {
-			var app = Sammy(function () {
+			var app = Sammy(function () {                
 				this.get('#/:name/dashboard', function (context) {
 					$('.report').hide();
 					viewModel.datasource(viewModel.datasources.filter(function (d) {
@@ -499,7 +492,8 @@
 					viewModel.datasource(viewModel.datasources.filter(function (d) {
 						return d.name == this.params['name'];
 					}, this)[0]);
-					viewModel.loadPerson();
+                    viewModel.loadDomainMeta('Person');
+                    viewModel.loadPerson();
 					$('#reportPerson').show();
 					report = 'person';
 				});
@@ -509,7 +503,7 @@
 					viewModel.datasource(viewModel.datasources.filter(function (d) {
 						return d.name == this.params['name'];
 					}, this)[0]);
-
+                    viewModel.loadDomainMeta('Condition');
 					reports.ConditionOccurrence.render(viewModel.datasource());
 					$('#reportConditionOccurrences').show();
 					report = 'conditions';
@@ -531,7 +525,7 @@
 					viewModel.datasource(viewModel.datasources.filter(function (d) {
 						return d.name == this.params['name'];
 					}, this)[0]);
-
+                    viewModel.loadDomainMeta('Drug');
 					reports.DrugExposure.render(viewModel.datasource());
 					$('#reportDrugExposures').show();
 					report = 'drugs';
@@ -553,7 +547,7 @@
 					viewModel.datasource(viewModel.datasources.filter(function (d) {
 						return d.name == this.params['name'];
 					}, this)[0]);
-
+                    viewModel.loadDomainMeta('Procedure');
 					reports.ProcedureOccurrence.render(viewModel.datasource());
 					$('#reportProcedureOccurrences').show();
 					report = 'procedures';
@@ -564,6 +558,7 @@
 					viewModel.datasource(viewModel.datasources.filter(function (d) {
 						return d.name == this.params['name'];
 					}, this)[0]);
+                    viewModel.loadDomainMeta('Observation Period');
 					viewModel.loadObservationPeriods();
 					$('#reportObservationPeriods').show();
 					report = 'observationperiods';
@@ -585,7 +580,7 @@
 					viewModel.datasource(viewModel.datasources.filter(function (d) {
 						return d.name == this.params['name'];
 					}, this)[0]);
-
+                    viewModel.loadDomainMeta('Observation');
 					reports.Observation.render(viewModel.datasource());
 					$('#reportObservations').show();
 					report = 'observations';
@@ -596,7 +591,7 @@
 					viewModel.datasource(viewModel.datasources.filter(function (d) {
 						return d.name == this.params['name'];
 					}, this)[0]);
-
+                    viewModel.loadDomainMeta('Visit');
 					reports.VisitOccurrence.render(viewModel.datasource());
 					$('#reportVisitOccurrences').show();
 					report = 'visits';
@@ -607,7 +602,7 @@
 					viewModel.datasource(viewModel.datasources.filter(function (d) {
 						return d.name == this.params['name'];
 					}, this)[0]);
-
+                    viewModel.loadDomainMeta('Death');
 					reports.Death.render(viewModel.datasource());
 					$('#reportDeath').show();
 					report = 'death';
@@ -618,7 +613,7 @@
 					viewModel.datasource(viewModel.datasources.filter(function (d) {
 						return d.name == this.params['name'];
 					}, this)[0]);
-
+                    viewModel.loadDomainMeta('Measurement');
 					reports.Measurement.render(viewModel.datasource());
 					$('#reportMeasurement').show();
 					report = 'measurement';
@@ -679,6 +674,9 @@ function getUrlFromData(datasource, name){
 		console.error("'" + name + "' not found in collectionFormats or simpledata.");
 		return;
 	}
+    
+    document.title = 'Achilles: ' + datasource.name;
+    
 	var parent = "";
 	if( datasource.parentUrl !== undefined) parent += datasource.parentUrl+"/";
 	var pth = "";

@@ -33,13 +33,22 @@
                                 
 								message_content = temp.substring(temp.indexOf(':') + 1);
                                 
-                                if (data.MESSAGES.hasOwnProperty('ANNOTATION'))
+                                annotation_status = annotation_message = 'NA';        
+                                if (data.MESSAGES.hasOwnProperty('ANNOTATION_STATUS'))
                                 {
-                                    message_annotation = data.MESSAGES.ANNOTATION[i];    
+                                    annotation_status = data.MESSAGES.ANNOTATION_STATUS[i];
+                                    if (annotation_status.toLowerCase() == 'non-issue')
+                                    {
+                                        annotation_status = '<i class="fa fa-check-square-o" aria-hidden="true"></i>' + annotation_status;
+                                    }                                    
+                                    else if (annotation_status.toLowerCase() == 'issue')
+                                    {
+                                        annotation_status = '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>' + annotation_status;
+                                    }
                                 }
-                                else
+                                if (data.MESSAGES.hasOwnProperty('ANNOTATION_MESSAGE'))
                                 {
-                                    message_annotation = 'NA';        
+                                    annotation_message = data.MESSAGES.ANNOTATION_MESSAGE[i];
                                 }
                                 
 								// RSD - A quick hack to put commas into large numbers.
@@ -51,7 +60,8 @@
                                     'id': message_id,
 									'type': message_type,
 									'content': message_content,
-                                    'annotation': message_annotation
+                                    'annotation_status': annotation_status,
+                                    'annotation_message': annotation_message
 								};
 							}
 
@@ -88,7 +98,12 @@
 										visible: true
 									},
                                     {
-										data: 'annotation',
+										data: 'annotation_status',
+										visible: true,
+                                        width: 100
+									},
+                                    {
+										data: 'annotation_message',
 										visible: true,
                                         width: 400
 									}

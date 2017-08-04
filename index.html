@@ -52,12 +52,15 @@
 					<span class="icon-bar"></span>
 				</button>
 				<a href class="navbar-brand">
-					<img src="images/ohdsi_logo.png" alt="OHDSI">ACHILLES
+					<img src="images/ohdsi_logo.png" alt="OHDSI">Achilles
                 </a>
 			</div>
 
 			<div class="collapse navbar-collapse" id="collapse-menu">
 				<ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="https://github.com/OHDSI/AchillesWeb" target="_blank"><i class="fa fa-fw fa-comment" aria-hidden="true"></i>Feedback</a>
+                    </li>
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-database" aria-hidden="true"></i>Data Sources <b class="caret"></b></a>
 						<ul id="dropdown-datasources" class="dropdown-menu">
@@ -133,7 +136,8 @@
                                         <th>Heel Id</th>
 										<th>Type</th>
 										<th>Message</th>
-                                        <th>Annotation</th>
+                                        <th>Annotation Status</th>
+                                        <th>Annotation Message</th>
 									</tr>
 								</thead>
 							</table>
@@ -146,7 +150,20 @@
 
 	<div id="reportObservationPeriods" class="report">
 		<div class="reportTitle">Observation Periods</div>
-
+        <div class="row" data-bind="if: domainMetaData()">
+            <div class="col-sm">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						Domain Metadata
+					</div>
+					<div class="panel-body">
+						<div class="col-sm-12">
+                            <div data-bind="text: domainMetaData()"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+        </div>
 		<div class="row">
 			<div class="col-sm-8">
 				<div class="panel panel-default">
@@ -301,7 +318,7 @@
 
 	<div id="reportPerson" class="report">
 		<div class="reportTitle">Person</div>
-        <!--<div class="row">
+        <div class="row" data-bind="if: domainMetaData()">
             <div class="col-sm">
 				<div class="panel panel-default">
 					<div class="panel-heading">
@@ -309,12 +326,12 @@
 					</div>
 					<div class="panel-body">
 						<div class="col-sm-12">
-                            <div id="personMeta"></div>
+                            <div data-bind="text: domainMetaData()"></div>
 						</div>
 					</div>
 				</div>
 			</div>
-        </div>!-->
+        </div>
 		<div class="row">
 			<div class="col-sm-4">
 				<div class="panel panel-default">
@@ -471,6 +488,20 @@
 
 	<div id="reportDrugExposures" class="report">
 		<div class="reportTitle">Drug Exposure Report</div>
+        <div class="row" data-bind="if: domainMetaData()">
+            <div class="col-sm">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						Domain Metadata
+					</div>
+					<div class="panel-body">
+						<div class="col-sm-12">
+                            <div data-bind="text: domainMetaData()"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+        </div>
 		<div class="row">
 			<div class="col-sm-12">
 				<div class="panel panel-default">
@@ -698,6 +729,20 @@
 
 	<div id="reportConditionOccurrences" class="report">
 		<div class="reportTitle">Conditions</div>
+        <div class="row" data-bind="if: domainMetaData()">
+            <div class="col-sm">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						Domain Metadata
+					</div>
+					<div class="panel-body">
+						<div class="col-sm-12">
+                            <div data-bind="text: domainMetaData()"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+        </div>
 		<div class="row">
 			<div class="col-sm-12">
 				<div class="panel panel-default panel-table">
@@ -795,6 +840,20 @@
 
 	<div id="reportProcedureOccurrences" class="report">
 		<div class="reportTitle">Procedures</div>
+        <div class="row" data-bind="if: domainMetaData()">
+            <div class="col-sm">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						Domain Metadata
+					</div>
+					<div class="panel-body">
+						<div class="col-sm-12">
+                            <div data-bind="text: domainMetaData()"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+        </div>
 		<div class="row">
 			<div class="col-sm-12">
 				<div class="panel panel-default">
@@ -891,6 +950,20 @@
 
 	<div id="reportObservations" class="report">
 		<div class="reportTitle">Observations</div>
+        <div class="row" data-bind="if: domainMetaData()">
+            <div class="col-sm">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						Domain Metadata
+					</div>
+					<div class="panel-body">
+						<div class="col-sm-12">
+                            <div data-bind="text: domainMetaData()"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+        </div>
 		<div class="row">
 			<div class="col-sm-12">
 				<div class="panel panel-default">
@@ -1160,6 +1233,20 @@
 
 	<div id="reportVisitOccurrences" class="report">
 		<div class="reportTitle">Visits</div>
+        <div class="row" data-bind="if: domainMetaData()">
+            <div class="col-sm">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						Domain Metadata
+					</div>
+					<div class="panel-body">
+						<div class="col-sm-12">
+                            <div data-bind="text: domainMetaData()"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+        </div>
 		<div class="row">
 			<div class="col-sm-12">
 				<div class="panel panel-default">
@@ -1253,6 +1340,20 @@
 
 	<div id="reportDeath" class="report">
 		<div class="reportTitle">Death</div>
+        <div class="row" data-bind="if: domainMetaData()">
+            <div class="col-sm">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						Domain Metadata
+					</div>
+					<div class="panel-body">
+						<div class="col-sm-12">
+                            <div data-bind="text: domainMetaData()"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+        </div>
 		<div class="row">
 			<div class="col-sm-12">
 				<div class="panel panel-default">
@@ -1303,6 +1404,20 @@
 	
 	<div id="reportMeasurements" class="report">
 		<div class="reportTitle">Measurements</div>
+        <div class="row" data-bind="if: domainMetaData()">
+            <div class="col-sm">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						Domain Metadata
+					</div>
+					<div class="panel-body">
+						<div class="col-sm-12">
+                            <div data-bind="text: domainMetaData()"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+        </div>
 		<div class="row">
 			<div class="col-sm-12">
 				<div class="panel panel-default">
