@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<title>Achilles</title>
+	<title>ACHILLES</title>
 	<link href="css/jquery.datatables.css" rel="stylesheet" />
 	<link href="css/jquery.datatables.tabletools.css" rel="stylesheet" />
 	<link href="css/jquery.datatables.colvis.css" rel="stylesheet" />
@@ -13,7 +13,8 @@
 	<link href="css/bootstrap.css" rel="stylesheet">
 	<link href="css/achilles.css" rel="stylesheet">
 	<link href="css/chart.css" rel="stylesheet">
-
+    <link href="css/font-awesome.min.css" rel="stylesheet" />
+    <link rel='shortcut icon' type='image/x-icon' href='favicon.ico'/>
 	<script>
 		var report = 'dashboard';
 		var page_vm = {};
@@ -34,7 +35,7 @@
 			document.location = '#/' + page_vm.datasource().name + '/' + report;
 		}
 	</script>
-
+    <script src="js/font-awesome.js"></script>
 	<script src="js/curl.config.js"></script>
 	<script src="js/curl.js"></script>
 	<script src="js/app/achilles.js"></script>	
@@ -51,20 +52,22 @@
 					<span class="icon-bar"></span>
 				</button>
 				<a href class="navbar-brand">
-					<img src="images/ohdsi_logo.png" alt="OHDSI">Achilles</a>
+					<img src="images/ohdsi_logo.png" alt="OHDSI">ACHILLES
+                </a>
 			</div>
 
 			<div class="collapse navbar-collapse" id="collapse-menu">
 				<ul class="nav navbar-nav navbar-right">
 					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Data Sources <b class="caret"></b></a>
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-database" aria-hidden="true"></i>Data Sources <b class="caret"></b></a>
 						<ul id="dropdown-datasources" class="dropdown-menu">
 						</ul>
 					</li>
 					<li>
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports <b class="caret"></b></a>
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-table" aria-hidden="true"></i>Reports <b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li onclick="updateReport('dashboard');">Dashboard</li>
+                            <li onclick="updateReport('domainmeta');">Domain Metadata</li>
 							<li onclick="updateReport('achillesheel');">Achilles Heel</li>
 							<li onclick="updateReport('person');">Person</li>
 							<li onclick="updateReport('observationperiods');">Observation Periods</li>
@@ -89,6 +92,31 @@
 
 	<div id="datasourceTitle" data-bind="text:datasource().name"></div>
 
+	<div id="reportDomainMeta" class="report">
+		<div class="reportTitle">Domain Metadata Report</div>
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						Metadata per CDM Domain
+					</div>
+					<div class="panel-body">
+						<div class="col-sm-12">
+							<table id="domainmeta_table" class="display">
+								<thead>
+									<tr>
+										<th>Domain Table</th>
+										<th>Information</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
 	<div id="reportAchillesHeel" class="report">
 		<div class="reportTitle">Achilles Heel Report</div>
 		<div class="row">
@@ -102,8 +130,10 @@
 							<table id="achillesheel_table" class="display">
 								<thead>
 									<tr>
-										<th>Message Type</th>
+                                        <th>Heel Id</th>
+										<th>Type</th>
 										<th>Message</th>
+                                        <th>Annotation</th>
 									</tr>
 								</thead>
 							</table>
@@ -271,6 +301,20 @@
 
 	<div id="reportPerson" class="report">
 		<div class="reportTitle">Person</div>
+        <!--<div class="row">
+            <div class="col-sm">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						Domain Metadata
+					</div>
+					<div class="panel-body">
+						<div class="col-sm-12">
+                            <div id="personMeta"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+        </div>!-->
 		<div class="row">
 			<div class="col-sm-4">
 				<div class="panel panel-default">
@@ -1404,7 +1448,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> 
 	</div>
 </body>
 

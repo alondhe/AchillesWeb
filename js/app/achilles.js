@@ -13,8 +13,8 @@
 
 			self.dashboardData = ko.observable();
 			self.conditionsData = ko.observable();
-
 			self.personData = ko.observable();
+            self.domainMetaData = ko.observable();
 			self.observationPeriodsData = ko.observable();
 			self.datasource = ko.observable({
 				name: 'loading...'
@@ -53,6 +53,16 @@
 					self.observationPeriodsData(result);
 				});
 			}
+            
+            self.loadDomainMeta = function () {
+                $.ajax({
+                    type: "GET",
+                    url: getUrlFromData(self.datasource(), "domainmeta"),
+                    contentType: "application/json; charset=utf-8",
+                }).done(function (result) {
+                    self.domainMetaData(result);
+                });
+            }
 
 			self.loadPerson = function () {
 				$.ajax({
@@ -60,7 +70,7 @@
 					url: getUrlFromData(self.datasource(), "person"),
 					contentType: "application/json; charset=utf-8",
 				}).done(function (result) {
-
+                    //result.DOMAINMETA = self.domainMetaData;
 					result.SUMMARY = common.dataframeToArray(result.SUMMARY);
 					result.SUMMARY.forEach(function (d, i, ar) {
 						if (!isNaN(d.ATTRIBUTE_VALUE))
@@ -97,14 +107,19 @@
 		});
 		viewModel.observationPeriodsData.subscribe(function (newData) {
 			updateObservationPeriods(newData);
-		});
+		});	
+        viewModel.domainMetaData.subscribe(function (newData) {
+			updateDomainMeta(newData);
+		});	
 
-
-		
-		
+		function updateDomainMeta(data) {
+            var result = data;
+            var i = result.DOMAINMETA.ATTRIBUTENAME.indexOf(report);
+        }
+        
 		function updateDashboard(data) {
 			var result = data;
-
+            
 			curl(["jnj/chart", "common"], function (jnj_chart, common) {
 				d3.selectAll("#reportDashboard #genderPie svg").remove();
 				genderDonut = new jnj_chart.donut();
@@ -390,8 +405,8 @@
 		}
 
 		function updatePerson(data) {
-			var result = data;
-
+			var result = data;			
+            $("#personMeta").append(result.DOMAINMETA);
 			curl(["jnj/chart", "common"], function (jnj_chart, common) {
 				d3.selectAll("#reportPerson #genderPie svg").remove();
 				genderDonut = new jnj_chart.donut();
@@ -466,6 +481,17 @@
 					reports.AchillesHeel.render(viewModel.datasource());
 					$('#reportAchillesHeel').show();
 					report = 'achillesheel';
+				});
+				
+				this.get('#/:name/domainmeta', function (context) {
+					$('.report').hide();
+					viewModel.datasource(viewModel.datasources.filter(function (d) {
+						return d.name == this.params['name'];
+					}, this)[0]);
+
+					reports.DomainMeta.render(viewModel.datasource());
+					$('#reportDomainMeta').show();
+					report = 'domainmeta';
 				});
 
 				this.get('#/:name/person', function (context) {
@@ -607,8 +633,18 @@
 					url: datasourcepath,
 					contentType: "application/json; charset=utf-8"
 				}).done(function (root) {
-					viewModel.datasources = root.datasources;
-
+                    
+                    root.datasources.sort(function(a, b){
+                        var nameA=a.name.toLowerCase(), nameB=b.name.toLowerCase()
+                        if (nameA < nameB) //sort string ascending
+                            return -1 
+                        if (nameA > nameB)
+                            return 1
+                        return 0 //default return value (no sorting)
+                    });
+                    
+                    viewModel.datasources = root.datasources;
+                    
 					for (i = 0; i < root.datasources.length; i++) {
 						$('#dropdown-datasources').append('<li onclick="setDatasource(' + i + ');">' + root.datasources[i].name + '</li>');
 					}
@@ -621,7 +657,7 @@
 	});
 })();
 
-var	simpledata = [ "achillesheel", "condition_treemap", "conditionera_treemap", "dashboard", "datadensity", "death", "drug_treemap", "drugera_treemap", "measurement_treemap", "observation_treemap", "observationperiod", "person", "procedure_treemap", "visit_treemap"];
+var	simpledata = [ "achillesheel", "domainmeta", "condition_treemap", "conditionera_treemap", "dashboard", "datadensity", "death", "drug_treemap", "drugera_treemap", "measurement_treemap", "observation_treemap", "observationperiod", "person", "procedure_treemap", "visit_treemap"];
 var collectionFormats = {
 	"conditioneras" : "condition_{id}.json",
 	"conditions" 	: "condition_{id}.json",
